@@ -5,18 +5,15 @@ import { View } from 'react-native';
  */
 import { __ } from '@wordpress/i18n';
 import { PlainText } from '@wordpress/editor';
-import { getPhrasingContentSchema } from '@wordpress/blocks';
-
+import { RawHTML } from '@wordpress/element';
 import RCTAztecView from 'react-native-aztec';
 
 export const name = 'core/paragraph';
 
 const schema = {
 	content: {
-		type: 'array',
-		source: 'children',
-		selector: 'p',
-		default: [],
+		type: 'string',
+		source: 'html',
 	},
 	align: {
 		type: 'string',
@@ -51,6 +48,7 @@ const schema = {
 const supports = {
 	className: false,
 };
+
 
 const _minHeight = 50;
 
@@ -99,22 +97,6 @@ export const settings = {
 			},
 		],
 	},
-/*
-	transforms: {
-		from: [
-			{
-				type: 'raw',
-				// Paragraph is a fallback and should be matched last.
-				priority: 20,
-				selector: 'p',
-				schema: {
-					p: {
-						children: getPhrasingContentSchema(),
-					},
-				},
-			},
-		],
-    },*/
 
 	edit( { attributes, setAttributes, style } ) {
 		if (attributes.aztecHeight == null) {
@@ -127,7 +109,7 @@ export const settings = {
 				style={ style, [ 
 					{ minHeight: Math.max( _minHeight, attributes.aztecHeight ) },
 				] }
-				//text={ { text:attributes.content, eventCount: attributes.eventCount } }
+				text={ { text:attributes.content, eventCount: attributes.eventCount } }
 				onContentSizeChange={ ( event ) => {
 					setAttributes( {
 						...attributes, 
@@ -150,6 +132,6 @@ export const settings = {
 	},
 	
 	save( { attributes } ) {
-		return <p>{attributes.content}</p>;
+		return <RawHTML>{attributes.content}</RawHTML>;
 	},
 };

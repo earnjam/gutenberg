@@ -22,7 +22,7 @@ const getLabelText = ( templateText, colorValue, colors ) => {
 	return sprintf( templateText, textColorName || colorValue );
 };
 
-function PanelColor( { title, colors, textColorValue, backgroundColorValue, ...props } ) {
+function PanelColor( { title, colors, textColorValue, backgroundColorValue, onChangeTextColor, onChangeBackgroundColor, ...props } ) {
 	const textColorLabel = getLabelText( __( '(current text color: %s)' ), textColorValue, colors );
 	const backgroundColorLabel = getLabelText( __( '(current background color: %s)' ), backgroundColorValue, colors );
 
@@ -46,6 +46,7 @@ function PanelColor( { title, colors, textColorValue, backgroundColorValue, ...p
 			>
 				<ColorPalette
 					value={ backgroundColorValue }
+					onChange={ onChangeBackgroundColor }
 					{ ...omit( props, [ 'disableCustomColors' ] ) }
 				/>
 			</BaseControl>
@@ -56,6 +57,7 @@ function PanelColor( { title, colors, textColorValue, backgroundColorValue, ...p
 			>
 				<ColorPalette
 					value={ textColorValue }
+					onChange={ onChangeTextColor }
 					{ ...omit( props, [ 'disableCustomColors' ] ) }
 				/>
 			</BaseControl>

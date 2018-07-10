@@ -22,7 +22,6 @@ import {
 	RichText,
 	BlockControls,
 	BlockAlignmentToolbar,
-	ContrastChecker,
 	InspectorControls,
 	withColors,
 	PanelColor,
@@ -122,14 +121,14 @@ class ButtonEdit extends Component {
 								value: backgroundColor.value,
 								onChange: setBackgroundColor,
 							} }
+							contrastCheckerProps={ {
+								isLargeText: true,
+								textColor: textColor.value,
+								backgroundColor: backgroundColor.value,
+								fallbackBackgroundColor,
+								fallbackTextColor,
+							} }
 						/>
-						{ this.nodeRef && <ContrastChecker
-							textColor={ textColor.value }
-							backgroundColor={ backgroundColor.value }
-							fallbackTextColor={ fallbackTextColor }
-							fallbackBackgroundColor={ fallbackBackgroundColor }
-							isLargeText={ true }
-						/> }
 					</InspectorControls>
 				</span>
 				{ isSelected && (

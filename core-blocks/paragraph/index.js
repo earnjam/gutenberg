@@ -26,7 +26,6 @@ import {
 	withColors,
 	AlignmentToolbar,
 	BlockControls,
-	ContrastChecker,
 	InspectorControls,
 	PanelColor,
 	RichText,
@@ -242,15 +241,13 @@ class ParagraphBlock extends Component {
 							value: backgroundColor.value,
 							onChange: setBackgroundColor,
 						} }
-					/>
-					<ContrastChecker
-						textColor={ textColor.value }
-						backgroundColor={ backgroundColor.value }
-						{ ...{
-							fallbackBackgroundColor,
+						contrastCheckerProps={ {
+							isLargeText: fontSize >= 18,
+							textColor: textColor.value,
+							backgroundColor: backgroundColor.value,
 							fallbackTextColor,
+							fallbackBackgroundColor,
 						} }
-						isLargeText={ fontSize >= 18 }
 					/>
 				</InspectorControls>
 				<RichText

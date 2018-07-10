@@ -8,6 +8,7 @@ import { __, sprintf } from '@wordpress/i18n';
 /**
  * Internal dependencies
  */
+import ContrastChecker from '../contrast-checker';
 import ColorPalette from '../color-palette';
 import withColorContext from '../color-palette/with-color-context';
 import { getColorName } from '../colors';
@@ -17,7 +18,7 @@ const getLabelText = ( templateText, colorValue, colors ) => {
 	return sprintf( templateText, textColorName || colorValue );
 };
 
-function PanelColor( { title, colors, textColorProps, backgroundColorProps } ) {
+function PanelColor( { title, colors, textColorProps, backgroundColorProps, contrastCheckerProps } ) {
 	const backgroundColorValue = backgroundColorProps.value;
 	const backgroundColorLabel = getLabelText( __( '(current background color: %s)' ), backgroundColorValue, colors );
 	const textColorValue = textColorProps.value;
@@ -50,6 +51,8 @@ function PanelColor( { title, colors, textColorProps, backgroundColorProps } ) {
 			>
 				<ColorPalette { ...textColorProps } />
 			</BaseControl>
+
+			<ContrastChecker { ...contrastCheckerProps } />
 		</PanelBody>
 	);
 }

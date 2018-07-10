@@ -234,10 +234,14 @@ class ParagraphBlock extends Component {
 					</PanelBody>
 					<PanelColor
 						title={ __( 'Color Settings' ) }
-						textColorValue={ textColor.value }
-						backgroundColorValue={ backgroundColor.value }
-						onChangeTextColor={ setTextColor }
-						onChangeBackgroundColor={ setBackgroundColor }
+						textColorProps={ {
+							value: textColor.value,
+							onChange: setTextColor,
+						} }
+						backgroundColorProps={ {
+							value: backgroundColor.value,
+							onChange: setBackgroundColor,
+						} }
 					/>
 					<ContrastChecker
 						textColor={ textColor.value }

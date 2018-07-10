@@ -114,10 +114,14 @@ class ButtonEdit extends Component {
 					<InspectorControls>
 						<PanelColor
 							title={ __( 'Color Settings' ) }
-							textColorValue={ textColor.value }
-							backgroundColorValue={ backgroundColor.value }
-							onChangeTextColor={ setTextColor }
-							onChangeBackgroundColor={ setBackgroundColor }
+							textColorProps={ {
+								value: textColor.value,
+								onChange: setTextColor,
+							} }
+							backgroundColorProps={ {
+								value: backgroundColor.value,
+								onChange: setBackgroundColor,
+							} }
 						/>
 						{ this.nodeRef && <ContrastChecker
 							textColor={ textColor.value }

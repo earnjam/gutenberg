@@ -1,9 +1,4 @@
 /**
- * External dependencies
- */
-import { omit } from 'lodash';
-
-/**
  * WordPress dependencies
  */
 import { ifCondition, PanelBody, BaseControl } from '@wordpress/components';
@@ -22,9 +17,11 @@ const getLabelText = ( templateText, colorValue, colors ) => {
 	return sprintf( templateText, textColorName || colorValue );
 };
 
-function PanelColor( { title, colors, textColorValue, backgroundColorValue, onChangeTextColor, onChangeBackgroundColor, ...props } ) {
-	const textColorLabel = getLabelText( __( '(current text color: %s)' ), textColorValue, colors );
+function PanelColor( { title, colors, textColorProps, backgroundColorProps } ) {
+	const backgroundColorValue = backgroundColorProps.value;
 	const backgroundColorLabel = getLabelText( __( '(current background color: %s)' ), backgroundColorValue, colors );
+	const textColorValue = textColorProps.value;
+	const textColorLabel = getLabelText( __( '(current text color: %s)' ), textColorValue, colors );
 
 	const titleElements = [
 		<span className="components-panel__color-title" key="title">{ title }</span>,
@@ -44,22 +41,14 @@ function PanelColor( { title, colors, textColorValue, backgroundColorValue, onCh
 				label={ __( 'Background Color' ) }
 				className="components-toggle-control"
 			>
-				<ColorPalette
-					value={ backgroundColorValue }
-					onChange={ onChangeBackgroundColor }
-					{ ...omit( props, [ 'disableCustomColors' ] ) }
-				/>
+				<ColorPalette { ...backgroundColorProps } />
 			</BaseControl>
 
 			<BaseControl
 				label={ __( 'Text Color' ) }
 				className="components-toggle-control"
 			>
-				<ColorPalette
-					value={ textColorValue }
-					onChange={ onChangeTextColor }
-					{ ...omit( props, [ 'disableCustomColors' ] ) }
-				/>
+				<ColorPalette { ...textColorProps } />
 			</BaseControl>
 		</PanelBody>
 	);

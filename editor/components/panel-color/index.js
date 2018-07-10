@@ -17,12 +17,14 @@ import ColorPalette from '../color-palette';
 import withColorContext from '../color-palette/with-color-context';
 import { getColorName } from '../colors';
 
-function PanelColor( { title, colors, textColorValue, backgroundColorValue, ...props } ) {
-	const textColorName = getColorName( colors, textColorValue );
-	const textColorLabel = sprintf( __( '(current text color: %s)' ), textColorName || textColorValue );
+const getLabelText = ( templateText, colorValue, colors ) => {
+	const textColorName = getColorName( colors, colorValue );
+	return sprintf( templateText, textColorName || colorValue );
+};
 
-	const backgroundColorName = getColorName( colors, textColorValue );
-	const backgroundColorLabel = sprintf( __( '(current background color: %s)' ), backgroundColorName || backgroundColorValue );
+function PanelColor( { title, colors, textColorValue, backgroundColorValue, ...props } ) {
+	const textColorLabel = getLabelText( __( '(current text color: %s)' ), textColorValue, colors );
+	const backgroundColorLabel = getLabelText( __( '(current background color: %s)' ), backgroundColorValue, colors );
 
 	const titleElements = [
 		<span className="components-panel__color-title" key="title">{ title }</span>,

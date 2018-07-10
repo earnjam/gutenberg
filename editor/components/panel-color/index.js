@@ -38,17 +38,11 @@ function PanelColor( { title, colors, textColorProps, backgroundColorProps, cont
 		<PanelBody
 			title={ titleElements }
 		>
-			<BaseControl
-				label={ __( 'Background Color' ) }
-				className="components-toggle-control"
-			>
+			<BaseControl label={ __( 'Background Color' ) }>
 				<ColorPalette { ...backgroundColorProps } />
 			</BaseControl>
 
-			<BaseControl
-				label={ __( 'Text Color' ) }
-				className="components-toggle-control"
-			>
+			<BaseControl label={ __( 'Text Color' ) } >
 				<ColorPalette { ...textColorProps } />
 			</BaseControl>
 

@@ -6,7 +6,7 @@ import { omit } from 'lodash';
 /**
  * WordPress dependencies
  */
-import { ifCondition, PanelBody } from '@wordpress/components';
+import { ifCondition, PanelBody, BaseControl } from '@wordpress/components';
 import { compose } from '@wordpress/element';
 import { __, sprintf } from '@wordpress/i18n';
 
@@ -38,15 +38,25 @@ function PanelColor( { title, colors, textColorValue, backgroundColorValue, ...p
 		<PanelBody
 			title={ titleElements }
 		>
-			<ColorPalette
-				value={ backgroundColorValue }
-				{ ...omit( props, [ 'disableCustomColors' ] ) }
-			/>
+			<BaseControl
+				label={ __( 'Background Color' ) }
+				className="components-toggle-control"
+			>
+				<ColorPalette
+					value={ backgroundColorValue }
+					{ ...omit( props, [ 'disableCustomColors' ] ) }
+				/>
+			</BaseControl>
 
-			<ColorPalette
-				value={ textColorValue }
-				{ ...omit( props, [ 'disableCustomColors' ] ) }
-			/>
+			<BaseControl
+				label={ __( 'Text Color' ) }
+				className="components-toggle-control"
+			>
+				<ColorPalette
+					value={ textColorValue }
+					{ ...omit( props, [ 'disableCustomColors' ] ) }
+				/>
+			</BaseControl>
 		</PanelBody>
 	);
 }

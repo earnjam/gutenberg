@@ -5,15 +5,18 @@ import { View } from 'react-native';
  */
 import { __ } from '@wordpress/i18n';
 import { PlainText } from '@wordpress/editor';
-import { RawHTML } from '@wordpress/element';
+import { RawHTML, renderToString } from '@wordpress/element';
 import RCTAztecView from 'react-native-aztec';
+import { parse } from '@wordpress/blocks';
 
 export const name = 'core/paragraph';
 
 const schema = {
 	content: {
-		type: 'string',
-		source: 'html',
+		type: 'array',
+		source: 'children',
+		selector: 'p',
+		default: [],
 	},
 	align: {
 		type: 'string',
@@ -102,14 +105,16 @@ export const settings = {
 		if (attributes.aztecHeight == null) {
 			attributes.aztecHeight = _minHeight;
 		}
-		//console.log(attributes);
+		if (attributes.innerAztecContent == null) {
+			attributes.innerAztecContent = renderToString( attributes.content );
+		}
 		return (
 			<RCTAztecView
 				accessibilityLabel="aztec-view"
 				style={ style, [ 
 					{ minHeight: Math.max( _minHeight, attributes.aztecHeight ) },
 				] }
-				text={ { text:attributes.content, eventCount: attributes.eventCount } }
+				text={ { text: attributes.innerAztecContent, eventCount: attributes.eventCount } }
 				onContentSizeChange={ ( event ) => {
 					setAttributes( {
 						...attributes, 
@@ -120,10 +125,10 @@ export const settings = {
 				onChange={ ( event ) => {
 					setAttributes( {
 						...attributes,
-						content: event.nativeEvent.text,
+						innerAztecContent: event.nativeEvent.text,
 						eventCount: event.nativeEvent.eventCount
 					 } 
-					) }
+					); }
 				}
 				color={ 'black' }
 				maxImagesWidth={ 200 }
@@ -132,6 +137,16 @@ export const settings = {
 	},
 	
 	save( { attributes } ) {
-		return <RawHTML>{attributes.content}</RawHTML>;
+		if (attributes.innerAztecContent != null) {
+			const newContent = parse(
+				'<!-- wp:paragraph --><p>' +
+				attributes.innerAztecContent +
+				'</p><!-- /wp:paragraph -->'
+			);
+			console.log(newContent[0].attributes.content);
+			return <p>{newContent[0].attributes.content}</p>;
+		} else {
+			return <p>{attributes.content}</p>;
+		}
 	},
 };

@@ -2,7 +2,7 @@
  * WordPress dependencies
  */
 import { ifCondition, PanelBody, BaseControl } from '@wordpress/components';
-import { compose } from '@wordpress/element';
+import { compose, Fragment } from '@wordpress/element';
 import { __, sprintf } from '@wordpress/i18n';
 
 /**
@@ -18,25 +18,41 @@ const getLabelText = ( templateText, colorValue, colors ) => {
 	return sprintf( templateText, textColorName || colorValue );
 };
 
-function PanelColor( { title, colors, textColorProps, backgroundColorProps, contrastCheckerProps } ) {
+const getTitle = ( title, textColorProps, backgroundColorProps, colors ) => {
 	const backgroundColorValue = backgroundColorProps.value;
 	const backgroundColorLabel = getLabelText( __( '(current background color: %s)' ), backgroundColorValue, colors );
 	const textColorValue = textColorProps.value;
 	const textColorLabel = getLabelText( __( '(current text color: %s)' ), textColorValue, colors );
 
-	const titleElements = [
-		<span className="components-panel__color-title" key="title">{ title }</span>,
-		backgroundColorValue && (
-			<span className="components-panel__color-area" aria-label={ backgroundColorLabel } key="color" style={ { background: backgroundColorValue } } />
-		),
-		textColorValue && (
-			<span className="components-panel__color-area" aria-label={ textColorLabel } key="color" style={ { background: textColorValue } } />
-		),
-	];
+	return (
+		<Fragment>
+			<span
+				className="components-panel__color-title"
+				key="title">
+				{ title }
+			</span>
+			{ backgroundColorValue && (
+				<span
+					className="components-panel__color-area"
+					aria-label={ backgroundColorLabel }
+					style={ { background: backgroundColorValue } }
+				/>
+			) }
+			{ textColorValue && (
+				<span
+					className="components-panel__color-area"
+					aria-label={ textColorLabel }
+					style={ { background: textColorValue } }
+				/>
+			) }
+		</Fragment>
+	);
+};
 
+function PanelColor( { title, colors, textColorProps, backgroundColorProps, contrastCheckerProps } ) {
 	return (
 		<PanelBody
-			title={ titleElements }
+			title={ getTitle( title, textColorProps, backgroundColorProps, colors ) }
 		>
 			<BaseControl label={ __( 'Background Color' ) }>
 				<ColorPalette { ...backgroundColorProps } />

@@ -7,7 +7,11 @@ import classnames from 'classnames';
  * WordPress dependencies
  */
 import { __ } from '@wordpress/i18n';
-import { Component, Fragment } from '@wordpress/element';
+import {
+	Component,
+	Fragment,
+	compose,
+} from '@wordpress/element';
 import {
 	Dashicon,
 	IconButton,
@@ -31,7 +35,7 @@ import './editor.scss';
 
 const { getComputedStyle } = window;
 
-const ContrastCheckerWithFallbackStyles = withFallbackStyles( ( node, ownProps ) => {
+const FallbackStyles = withFallbackStyles( ( node, ownProps ) => {
 	const { textColor, backgroundColor } = ownProps;
 	//avoid the use of querySelector if textColor color is known and verify if node is available.
 	const textNode = ! textColor && node ? node.querySelector( '[contenteditable="true"]' ) : null;
@@ -39,7 +43,7 @@ const ContrastCheckerWithFallbackStyles = withFallbackStyles( ( node, ownProps )
 		fallbackBackgroundColor: backgroundColor || ! node ? undefined : getComputedStyle( node ).backgroundColor,
 		fallbackTextColor: textColor || ! textNode ? undefined : getComputedStyle( textNode ).color,
 	};
-} )( ContrastChecker );
+} );
 
 class ButtonEdit extends Component {
 	constructor() {
@@ -67,6 +71,8 @@ class ButtonEdit extends Component {
 			textColor,
 			setBackgroundColor,
 			setTextColor,
+			fallbackBackgroundColor,
+			fallbackTextColor,
 			setAttributes,
 			isSelected,
 			className,
@@ -113,10 +119,11 @@ class ButtonEdit extends Component {
 							onChangeTextColor={ setTextColor }
 							onChangeBackgroundColor={ setBackgroundColor }
 						/>
-						{ this.nodeRef && <ContrastCheckerWithFallbackStyles
-							node={ this.nodeRef }
+						{ this.nodeRef && <ContrastChecker
 							textColor={ textColor.value }
 							backgroundColor={ backgroundColor.value }
+							fallbackTextColor={ fallbackTextColor }
+							fallbackBackgroundColor={ fallbackBackgroundColor }
 							isLargeText={ true }
 						/> }
 					</InspectorControls>
@@ -138,4 +145,7 @@ class ButtonEdit extends Component {
 	}
 }
 
-export default withColors( 'backgroundColor', { textColor: 'color' } )( ButtonEdit );
+export default compose( [
+	withColors( 'backgroundColor', { textColor: 'color' } ),
+	FallbackStyles,
+] )( ButtonEdit );

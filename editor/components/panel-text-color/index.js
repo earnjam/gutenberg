@@ -1,9 +1,9 @@
 /**
  * WordPress dependencies
  */
-import { ifCondition, BaseControl, PanelTextColor as PanelTextColorComponent } from '@wordpress/components';
-import { __ } from '@wordpress/i18n';
-import { compose } from '@wordpress/element';
+import { ifCondition, PanelBody, BaseControl } from '@wordpress/components';
+import { compose, Fragment } from '@wordpress/element';
+import { __, sprintf } from '@wordpress/i18n';
 
 /**
  * Internal dependencies
@@ -13,21 +13,46 @@ import ContrastChecker from '../contrast-checker';
 import withColorContext from '../color-palette/with-color-context';
 import { getColorName } from '../colors';
 
-function PanelTextColor( { title, colors, backgroundColorProps, textColorProps, contrastCheckerProps } ) {
+const getLabelText = ( templateText, colorValue, colors ) => {
+	const textColorName = getColorName( colors, colorValue );
+	return sprintf( templateText, textColorName || colorValue );
+};
+
+const getTitle = ( title, textColorProps, backgroundColorProps, colors ) => {
 	const backgroundColorValue = backgroundColorProps.value;
+	const backgroundColorLabel = getLabelText( __( '(current background color: %s)' ), backgroundColorValue, colors );
 	const textColorValue = textColorProps.value;
+	const textColorLabel = getLabelText( __( '(current text color: %s)' ), textColorValue, colors );
 
 	return (
-		<PanelTextColorComponent
-			title={ title }
-			backgroundColor={ {
-				name: getColorName( colors, backgroundColorValue ),
-				value: backgroundColorValue,
-			} }
-			textColor={ {
-				name: getColorName( colors, textColorValue ),
-				value: textColorValue,
-			} }
+		<Fragment>
+			<span
+				className="components-panel__color-title"
+				key="title">
+				{ title }
+			</span>
+			{ backgroundColorValue && (
+				<span
+					className="components-panel__color-area"
+					aria-label={ backgroundColorLabel }
+					style={ { background: backgroundColorValue } }
+				/>
+			) }
+			{ textColorValue && (
+				<span
+					className="components-panel__color-area"
+					aria-label={ textColorLabel }
+					style={ { background: textColorValue } }
+				/>
+			) }
+		</Fragment>
+	);
+};
+
+function PanelTextColor( { title, colors, textColorProps, backgroundColorProps, contrastCheckerProps } ) {
+	return (
+		<PanelBody
+			title={ getTitle( title, textColorProps, backgroundColorProps, colors ) }
 		>
 			<BaseControl label={ __( 'Background Color' ) }>
 				<ColorPalette { ...backgroundColorProps } />
@@ -38,7 +63,7 @@ function PanelTextColor( { title, colors, backgroundColorProps, textColorProps, 
 			</BaseControl>
 
 			<ContrastChecker { ...contrastCheckerProps } />
-		</PanelTextColorComponent>
+		</PanelBody>
 	);
 }
 

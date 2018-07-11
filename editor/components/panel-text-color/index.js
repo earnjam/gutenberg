@@ -1,64 +1,68 @@
 /**
  * WordPress dependencies
  */
-import { ifCondition, PanelBody, BaseControl } from '@wordpress/components';
+import {
+	ifCondition,
+	PanelBody,
+	BaseControl,
+	ColorArea,
+} from '@wordpress/components';
 import { compose, Fragment } from '@wordpress/element';
 import { __, sprintf } from '@wordpress/i18n';
 
 /**
  * Internal dependencies
  */
-import ColorPalette from '../color-palette';
 import ContrastChecker from '../contrast-checker';
+import ColorPalette from '../color-palette';
 import withColorContext from '../color-palette/with-color-context';
 import { getColorName } from '../colors';
 
-const getLabelText = ( templateText, colorValue, colors ) => {
-	const textColorName = getColorName( colors, colorValue );
-	return sprintf( templateText, textColorName || colorValue );
+const getColorAreaProps = ( colors, colorValue, ariaLabelTemplate ) => {
+	if ( ! colorValue ) {
+		return;
+	}
+
+	const colorName = getColorName( colors, colorValue );
+
+	return {
+		colorValue,
+		ariaLabel: sprintf( ariaLabelTemplate, colorName || colorValue ),
+	};
 };
 
-const getTitle = ( title, textColorProps, backgroundColorProps, colors ) => {
+const getTitle = ( title, colorAreaProps ) => (
+	<Fragment>
+		{ title }
+		{ colorAreaProps.map( ( props, index ) => (
+			props && <ColorArea
+				key={ index }
+				{ ...props }
+			/>
+		) ) }
+	</Fragment>
+);
+
+function PanelTextColor( { title, colors, backgroundColorProps, textColorProps, contrastCheckerProps } ) {
+	// translators: %s: The name of the color e.g: "vivid red" or color hex code if name is not available e.g: "#f00".
+	const backgroundAriaLabelTemplate = __( '(current background color: %s)' );
 	const backgroundColorValue = backgroundColorProps.value;
-	const backgroundColorLabel = getLabelText( __( '(current background color: %s)' ), backgroundColorValue, colors );
+	const backgroundColorAreaProps = getColorAreaProps( colors, backgroundColorValue, backgroundAriaLabelTemplate );
+
+	// translators: %s: The name of the color e.g: "vivid red" or color hex code if name is not available e.g: "#f00".
+	const textAriaLabelTemplate = __( '(current text color: %s)' );
 	const textColorValue = textColorProps.value;
-	const textColorLabel = getLabelText( __( '(current text color: %s)' ), textColorValue, colors );
+	const textColorAreaProps = getColorAreaProps( colors, textColorValue, textAriaLabelTemplate );
 
-	return (
-		<Fragment>
-			<span
-				className="components-panel__color-title"
-				key="title">
-				{ title }
-			</span>
-			{ backgroundColorValue && (
-				<span
-					className="components-panel__color-area"
-					aria-label={ backgroundColorLabel }
-					style={ { background: backgroundColorValue } }
-				/>
-			) }
-			{ textColorValue && (
-				<span
-					className="components-panel__color-area"
-					aria-label={ textColorLabel }
-					style={ { background: textColorValue } }
-				/>
-			) }
-		</Fragment>
-	);
-};
-
-function PanelTextColor( { title, colors, textColorProps, backgroundColorProps, contrastCheckerProps } ) {
 	return (
 		<PanelBody
-			title={ getTitle( title, textColorProps, backgroundColorProps, colors ) }
+			title={ getTitle( title, [ backgroundColorAreaProps, textColorAreaProps ] ) }
 		>
-			<BaseControl label={ __( 'Background Color' ) }>
+			<BaseControl label={ getTitle( __( 'Background Color' ), [ backgroundColorAreaProps ] ) }>
 				<ColorPalette { ...backgroundColorProps } />
 			</BaseControl>
 
-			<BaseControl label={ __( 'Text Color' ) } >
+			<BaseControl label={ getTitle( __( 'Text Color' ), [ textColorAreaProps ] ) } >
 				<ColorPalette { ...textColorProps } />
 			</BaseControl>
 

@@ -8,7 +8,6 @@ import { compose } from '@wordpress/element';
 /**
  * Internal dependencies
  */
-import './style.scss';
 import ColorPalette from '../color-palette';
 import ContrastChecker from '../contrast-checker';
 import withColorContext from '../color-palette/with-color-context';

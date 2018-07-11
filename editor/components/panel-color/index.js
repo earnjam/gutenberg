@@ -1,69 +1,30 @@
 /**
+ * External dependencies
+ */
+import { omit } from 'lodash';
+
+/**
  * WordPress dependencies
  */
-import { ifCondition, PanelBody, BaseControl } from '@wordpress/components';
-import { compose, Fragment } from '@wordpress/element';
-import { __, sprintf } from '@wordpress/i18n';
+import { ifCondition, PanelColor as PanelColorComponent } from '@wordpress/components';
+import { compose } from '@wordpress/element';
 
 /**
  * Internal dependencies
  */
-import ContrastChecker from '../contrast-checker';
 import ColorPalette from '../color-palette';
 import withColorContext from '../color-palette/with-color-context';
 import { getColorName } from '../colors';
 
-const getLabelText = ( templateText, colorValue, colors ) => {
-	const textColorName = getColorName( colors, colorValue );
-	return sprintf( templateText, textColorName || colorValue );
-};
-
-const getTitle = ( title, textColorProps, backgroundColorProps, colors ) => {
-	const backgroundColorValue = backgroundColorProps.value;
-	const backgroundColorLabel = getLabelText( __( '(current background color: %s)' ), backgroundColorValue, colors );
-	const textColorValue = textColorProps.value;
-	const textColorLabel = getLabelText( __( '(current text color: %s)' ), textColorValue, colors );
-
+function PanelColor( { colors, title, colorValue, initialOpen, ...props } ) {
+	const colorName = getColorName( colors, colorValue );
 	return (
-		<Fragment>
-			<span
-				className="components-panel__color-title"
-				key="title">
-				{ title }
-			</span>
-			{ backgroundColorValue && (
-				<span
-					className="components-panel__color-area"
-					aria-label={ backgroundColorLabel }
-					style={ { background: backgroundColorValue } }
-				/>
-			) }
-			{ textColorValue && (
-				<span
-					className="components-panel__color-area"
-					aria-label={ textColorLabel }
-					style={ { background: textColorValue } }
-				/>
-			) }
-		</Fragment>
-	);
-};
-
-function PanelColor( { title, colors, textColorProps, backgroundColorProps, contrastCheckerProps } ) {
-	return (
-		<PanelBody
-			title={ getTitle( title, textColorProps, backgroundColorProps, colors ) }
-		>
-			<BaseControl label={ __( 'Background Color' ) }>
-				<ColorPalette { ...backgroundColorProps } />
-			</BaseControl>
-
-			<BaseControl label={ __( 'Text Color' ) } >
-				<ColorPalette { ...textColorProps } />
-			</BaseControl>
-
-			<ContrastChecker { ...contrastCheckerProps } />
-		</PanelBody>
+		<PanelColorComponent { ...{ title, colorName, colorValue, initialOpen } } >
+			<ColorPalette
+				value={ colorValue }
+				{ ...omit( props, [ 'disableCustomColors' ] ) }
+			/>
+		</PanelColorComponent>
 	);
 }
 

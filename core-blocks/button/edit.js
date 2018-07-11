@@ -24,7 +24,7 @@ import {
 	BlockAlignmentToolbar,
 	InspectorControls,
 	withColors,
-	PanelColor,
+	PanelTextColor,
 } from '@wordpress/editor';
 
 /**
@@ -111,7 +111,7 @@ class ButtonEdit extends Component {
 						keepPlaceholderOnFocus
 					/>
 					<InspectorControls>
-						<PanelColor
+						<PanelTextColor
 							title={ __( 'Color Settings' ) }
 							textColorProps={ {
 								value: textColor.value,

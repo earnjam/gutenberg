@@ -9,6 +9,7 @@ import { Fragment } from '@wordpress/element';
  */
 import './style.scss';
 import PanelBody from './body';
+import ColorArea from '../color-area';
 
 const Title = ( { title, backgroundColor, textColor } ) => {
 	// translators: %s: The name of the color e.g: "vivid red" or color hex code if name is not available e.g: "#f00".
@@ -25,17 +26,17 @@ const Title = ( { title, backgroundColor, textColor } ) => {
 				{ title }
 			</span>
 			{ !! backgroundColor.value && (
-				<span
+				<ColorArea
 					className="components-panel__color-area"
-					aria-label={ backgroundColorLabel }
-					style={ { background: backgroundColor.value } }
+					ariaLabel={ backgroundColorLabel }
+					colorValue={ backgroundColor.value }
 				/>
 			) }
 			{ !! textColor.value && (
-				<span
+				<ColorArea
 					className="components-panel__color-area"
-					aria-label={ textColorLabel }
-					style={ { background: textColor.value } }
+					ariaLabel={ textColorLabel }
+					colorValue={ textColor.value }
 				/>
 			) }
 		</Fragment>

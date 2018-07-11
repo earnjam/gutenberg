@@ -8,6 +8,7 @@ import { __, sprintf } from '@wordpress/i18n';
  */
 import './style.scss';
 import PanelBody from './body';
+import ColorArea from '../color-area';
 
 function PanelColor( { colorValue, colorName, title, ...props } ) {
 	// translators: %s: The name of the color e.g: "vivid red" or color hex code if name is not available e.g: "#f00".
@@ -18,7 +19,12 @@ function PanelColor( { colorValue, colorName, title, ...props } ) {
 			title={ [
 				<span className="components-panel__color-title" key="title">{ title }</span>,
 				colorValue && (
-					<span className="components-panel__color-area" aria-label={ currentColorLabel } key="color" style={ { background: colorValue } } />
+					<ColorArea
+						key="color"
+						className="components-panel__color-area"
+						ariaLabel={ currentColorLabel }
+						colorValue={ colorValue }
+					/>
 				),
 			] }
 		/>

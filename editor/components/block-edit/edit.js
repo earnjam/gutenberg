@@ -36,11 +36,11 @@ export const Edit = ( props ) => {
 
 	// The block can define a function that returns controls for the block toolbar,
 	// which are reusable for multi-block selection.
-	const getControls = blockType.controls;
+	const toolbarControls = blockType.toolbar;
 	let controls;
 
-	if ( undefined !== getControls ) {
-		controls = getControls( attributes, setAttributes );
+	if ( undefined !== toolbarControls ) {
+		controls = toolbarControls( attributes, setAttributes );
 	}
 
 	return (

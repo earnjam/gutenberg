@@ -62,15 +62,17 @@ const POST_FORMAT_BLOCK_MAP = {
  *
  * @param {string} name     Block name.
  * @param {Object} settings Block settings.
+ * @param {Object} controls Optional bblock controls for the toolbar and inspector.
  *
  * @return {?WPBlock} The block, if it has been successfully registered;
  *                     otherwise `undefined`.
  */
-export function registerBlockType( name, settings ) {
+export function registerBlockType( name, settings, controls = {} ) {
 	settings = {
 		name,
 		...get( window._wpBlocks, name ),
 		...settings,
+		...controls,
 	};
 
 	if ( typeof name !== 'string' ) {

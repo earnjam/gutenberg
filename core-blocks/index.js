@@ -78,8 +78,8 @@ export const registerCoreBlocks = () => {
 		textColumns,
 		verse,
 		video,
-	].forEach( ( { name, settings } ) => {
-		registerBlockType( name, settings );
+	].forEach( ( { name, settings, controls = {} } ) => {
+		registerBlockType( name, settings, controls );
 	} );
 
 	setDefaultBlockName( paragraph.name );

@@ -44,15 +44,15 @@ function BlockListMultiControls( { multiSelectedBlockUids, multiSelectedBlocks, 
 	let controls;
 
 	if ( 1 === names.length ) {
-		const getControls = getBlockType( names[ 0 ] ).controls;
+		const toolbarControls = getBlockType( names[ 0 ] ).toolbar;
 		const setAttributes = ( newAttibutes ) => {
 			for ( let i = 0; i < multiSelectedBlocks.length; i++ ) {
 				const uid = multiSelectedBlocks[ i ].uid;
 				onChange( uid, newAttibutes );
 			}
 		};
-		if ( undefined !== getControls ) {
-			controls = getControls( reduceAttributes( multiSelectedBlocks ), setAttributes );
+		if ( undefined !== toolbarControls ) {
+			controls = toolbarControls( reduceAttributes( multiSelectedBlocks ), setAttributes );
 		}
 	}
 

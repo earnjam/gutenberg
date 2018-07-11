@@ -74,18 +74,6 @@ const FONT_SIZES = [
 	},
 ];
 
-const controls = ( attributes, setAttributes ) => {
-	const { align } = attributes;
-	return (
-		<AlignmentToolbar
-			value={ align }
-			onChange={ ( nextAlign ) => {
-				setAttributes( { align: nextAlign } );
-			} }
-		/>
-	);
-};
-
 class ParagraphBlock extends Component {
 	constructor() {
 		super( ...arguments );
@@ -302,6 +290,20 @@ const schema = {
 
 export const name = 'core/paragraph';
 
+export const controls = {
+	toolbar: ( attributes, setAttributes ) => {
+		const { align } = attributes;
+		return (
+			<AlignmentToolbar
+				value={ align }
+				onChange={ ( nextAlign ) => {
+					setAttributes( { align: nextAlign } );
+				} }
+			/>
+		);
+	},
+}
+
 export const settings = {
 	title: __( 'Paragraph' ),
 
@@ -316,8 +318,6 @@ export const settings = {
 	supports,
 
 	attributes: schema,
-
-	controls,
 
 	transforms: {
 		from: [

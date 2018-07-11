@@ -1,0 +1,9 @@
+.editor-panel-text-color {
+	&__panel-title-color-area {
+		display: inline-block;
+	}
+
+	&.is-opened &__panel-title-color-area {
+		display: none;
+	}
+}

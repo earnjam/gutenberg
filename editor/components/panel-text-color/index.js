@@ -13,6 +13,7 @@ import { __, sprintf } from '@wordpress/i18n';
 /**
  * Internal dependencies
  */
+import './style.scss';
 import ContrastChecker from '../contrast-checker';
 import ColorPalette from '../color-palette';
 import withColorContext from '../color-palette/with-color-context';
@@ -31,12 +32,13 @@ const getColorAreaProps = ( colors, colorValue, ariaLabelTemplate ) => {
 	};
 };
 
-const getTitle = ( title, colorAreaProps ) => (
+const getTitle = ( title, colorAreaProps, colorAreaClassName ) => (
 	<Fragment>
 		{ title }
 		{ colorAreaProps.map( ( props, index ) => (
 			props && <ColorArea
 				key={ index }
+				className={ colorAreaClassName }
 				{ ...props }
 			/>
 		) ) }
@@ -44,6 +46,8 @@ const getTitle = ( title, colorAreaProps ) => (
 );
 
 function PanelTextColor( { title, colors, backgroundColorProps, textColorProps, contrastCheckerProps } ) {
+	const titleColorAreaClassName = 'editor-panel-text-color__panel-title-color-area';
+
 	// translators: %s: The name of the color e.g: "vivid red" or color hex code if name is not available e.g: "#f00".
 	const backgroundAriaLabelTemplate = __( '(current background color: %s)' );
 	const backgroundColorValue = backgroundColorProps.value;
@@ -56,7 +60,8 @@ function PanelTextColor( { title, colors, backgroundColorProps, textColorProps, 
 
 	return (
 		<PanelBody
-			title={ getTitle( title, [ backgroundColorAreaProps, textColorAreaProps ] ) }
+			className="editor-panel-text-color"
+			title={ getTitle( title, [ backgroundColorAreaProps, textColorAreaProps ], titleColorAreaClassName ) }
 		>
 			<BaseControl label={ getTitle( __( 'Background Color' ), [ backgroundColorAreaProps ] ) }>
 				<ColorPalette { ...backgroundColorProps } />

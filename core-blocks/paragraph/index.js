@@ -302,7 +302,7 @@ export const controls = {
 			/>
 		);
 	},
-}
+};
 
 export const settings = {
 	title: __( 'Paragraph' ),

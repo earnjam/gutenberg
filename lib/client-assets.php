@@ -206,7 +206,14 @@ function gutenberg_register_scripts_and_styles() {
 	wp_register_script(
 		'wp-data',
 		gutenberg_url( 'build/data/index.js' ),
-		array( 'wp-deprecated', 'wp-element', 'wp-compose', 'wp-is-shallow-equal', 'lodash' ),
+		array(
+			'wp-deprecated',
+			'wp-element',
+			'wp-compose',
+			'wp-is-shallow-equal',
+			'lodash',
+			'wp-redux-routine',
+		),
 		filemtime( gutenberg_dir_path() . 'build/data/index.js' ),
 		true
 	);
@@ -222,7 +229,9 @@ function gutenberg_register_scripts_and_styles() {
 			'		localStorage[ storageKey ] = localStorage[ oldStorageKey ];',
 			'		delete localStorage[ oldStorageKey ];',
 			'	}',
-			'	wp.data.use( wp.data.plugins.persistence, { storageKey: storageKey } );',
+			'	wp.data',
+			'		.use( wp.data.plugins.persistence, { storageKey: storageKey } )',
+			'		.use( wp.data.plugins.controls );',
 			'} )()',
 		) )
 	);
@@ -266,6 +275,13 @@ function gutenberg_register_scripts_and_styles() {
 		gutenberg_url( 'build/shortcode/index.js' ),
 		array(),
 		filemtime( gutenberg_dir_path() . 'build/shortcode/index.js' ),
+		true
+	);
+	wp_register_script(
+		'wp-redux-routine',
+		gutenberg_url( 'build/redux-routine/index.js' ),
+		array(),
+		filemtime( gutenberg_dir_path() . 'build/redux-routine/index.js' ),
 		true
 	);
 	wp_add_inline_script( 'wp-utils', 'var originalUtils = window.wp && window.wp.utils ? window.wp.utils : {};', 'before' );
@@ -1190,9 +1206,21 @@ function gutenberg_editor_scripts_and_styles( $hook ) {
 
 	// Prepopulate with some test content in demo.
 	if ( $is_new_post && $is_demo ) {
+		ob_start();
+		include gutenberg_dir_path() . 'post-content.php';
+		$demo_content = ob_get_clean();
+
 		wp_add_inline_script(
 			'wp-edit-post',
-			file_get_contents( gutenberg_dir_path() . 'post-content.js' )
+			sprintf(
+				'window._wpGutenbergDefaultPost = { title: %s, content: %s };',
+				wp_json_encode( array(
+					'raw' => __( 'Welcome to the Gutenberg Editor', 'gutenberg' ),
+				) ),
+				wp_json_encode( array(
+					'raw' => $demo_content,
+				) )
+			)
 		);
 	} elseif ( $is_new_post ) {
 		wp_add_inline_script(

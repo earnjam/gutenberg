@@ -20,6 +20,7 @@ import { link as linkIcon } from '@wordpress/icons';
  */
 import PostPermalinkEditor from './editor.js';
 import { cleanForSlug } from '../../utils/url';
+import { getWPAdminURL } from '../../utils/url';
 
 class PostPermalink extends Component {
 	constructor() {
@@ -70,8 +71,6 @@ class PostPermalink extends Component {
 			permalinkParts,
 			postLink,
 			postSlug,
-			postID,
-			postTitle,
 		} = this.props;
 
 		if ( isNew || ! isViewable || ! permalinkParts || ! postLink ) {
@@ -149,29 +148,28 @@ class PostPermalink extends Component {
 export default compose( [
 	withSelect( ( select ) => {
 		const {
-			isEditedPostNew,
+			isCleanNewPost,
 			isPermalinkEditable,
 			getCurrentPost,
 			getPermalinkParts,
 			getEditedPostAttribute,
 			isCurrentPostPublished,
+			getEditedPostSlug,
 		} = select( 'core/editor' );
 		const { getPostType } = select( 'core' );
 
-		const { id, link } = getCurrentPost();
+		const { link } = getCurrentPost();
 
 		const postTypeName = getEditedPostAttribute( 'type' );
 		const postType = getPostType( postTypeName );
 
 		return {
-			isNew: isEditedPostNew(),
+			isNew: isCleanNewPost(),
 			postLink: link,
 			permalinkParts: getPermalinkParts(),
-			postSlug: getEditedPostAttribute( 'slug' ),
+			postSlug: safeDecodeURIComponent( getEditedPostSlug() ),
 			isEditable: isPermalinkEditable(),
 			isPublished: isCurrentPostPublished(),
-			postTitle: getEditedPostAttribute( 'title' ),
-			postID: id,
 			isViewable: get( postType, [ 'viewable' ], false ),
 		};
 	} ),

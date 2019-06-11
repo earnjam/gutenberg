@@ -1160,7 +1160,7 @@ export function getPermalink( state ) {
  *
  * @return {string} The current slug to be displayed in the editor
  */
-export function getEditedPostSlug( state ) {
+export const getEditedPostSlug = createRegistrySelector( ( select ) => function( state ) {
 	const currentSlug = getEditedPostAttribute( state, 'slug' );
 
 	if ( currentSlug ) {
@@ -1179,14 +1179,20 @@ export function getEditedPostSlug( state ) {
 		generatedSlug !== 'auto-draft' &&
 		! isSavingPost( state ) ) {
 		if ( hasAutosave( state ) ) {
-			return getAutosaveAttribute( state, 'generated_slug' );
+			const postType = getCurrentPostType( state );
+			const postId = getCurrentPostId( state );
+			const currentUserId = get( select( 'core' ).getCurrentUser(), [ 'id' ] );
+			const autosave = select( 'core' ).getAutosave( postType, postId, currentUserId );
+			if ( autosave ) {
+				return getPostRawValue( autosave.generated_slug );
+			}
 		}
 
 		return generatedSlug;
 	}
 
 	return cleanForSlug( getEditedPostAttribute( state, 'title' ) ) || getCurrentPostId( state );
-}
+} );
 
 /**
  * Returns the permalink for a post, split into it's three parts: the prefix,

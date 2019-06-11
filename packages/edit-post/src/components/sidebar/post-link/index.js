@@ -28,7 +28,6 @@ function PostLink( {
 	forceEmptyField,
 	setState,
 	postSlug,
-	postID,
 	postTypeLabel,
 } ) {
 	const { prefix, suffix } = permalinkParts;

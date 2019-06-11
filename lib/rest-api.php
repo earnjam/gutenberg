@@ -188,7 +188,9 @@ function gutenberg_add_generated_slug_to_autosaves( $response, $post, $request )
 	if ( ! function_exists( 'get_sample_permalink' ) ) {
 		require_once ABSPATH . '/wp-admin/includes/post.php';
 	}
-	$sample_permalink = get_sample_permalink( $post->ID, $post->post_title, '' );
+
+	$params           = $request->get_json_params();
+	$sample_permalink = get_sample_permalink( $post->ID, $post->post_title, $params['slug'] );
 
 	$response->data['generated_slug'] = $sample_permalink[1];
 	return $response;

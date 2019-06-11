@@ -333,6 +333,21 @@ _Returns_
 
 -   `?string`: Preview Link.
 
+<a name="getEditedPostSlug" href="#getEditedPostSlug">#</a> **getEditedPostSlug**
+
+Returns the slug for the post being edited, preferring a manually edited
+value if one exists. It falls back to an auto-generated value returned from
+an autosave, then to a sanitized version of the current post title, and
+finally to the post ID.
+
+_Parameters_
+
+-   _state_ `Object`: Editor state.
+
+_Returns_
+
+-   `string`: The current slug to be displayed in the editor
+
 <a name="getEditedPostVisibility" href="#getEditedPostVisibility">#</a> **getEditedPostVisibility**
 
 Returns the current visibility of the post being edited, preferring the

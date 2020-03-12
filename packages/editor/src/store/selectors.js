@@ -30,6 +30,7 @@ import {
 } from './constants';
 import { getPostRawValue } from './reducer';
 import serializeBlocks from './utils/serialize-blocks';
+import { cleanForSlug } from '../utils/url';
 
 /**
  * Shared reference to an empty object for cases where it is important to avoid
@@ -1148,6 +1149,63 @@ export function getPermalink( state ) {
 
 	return prefix;
 }
+
+/**
+ * Returns the slug for the post being edited, preferring a manually edited
+ * value if one exists, then a sanitized version of the current post title, and
+ * finally the post ID.
+ *
+ * @param {Object} state Editor state.
+ *
+ * @return {string} The current slug to be displayed in the editor
+ */
+export function getEditedPostSlug( state ) {
+	return (
+		getEditedPostAttribute( state, 'slug' ) ||
+		cleanForSlug( getEditedPostAttribute( state, 'title' ) ) ||
+		getCurrentPostId( state )
+	);
+}
+
+// 		// Saved or directly edited slug
+// 	const currentSlug = getEditedPostAttribute( state, 'slug' );
+// 	if ( currentSlug ) {
+// 		return currentSlug;
+// 	}
+
+// 	const title = getEditedPostAttribute( state, 'title' );
+// 	if ( ! title ) {
+// 		return getCurrentPostId( state );
+// 	}
+
+// 	return cleanForSlug( title );
+
+// 	// If he title has not been edited, then there may be a php generated slug
+// 	// available on the current_post, or on an autosave if one exists.
+// 	// This will be more accurate than generating it from the post title
+// 	// because it accounts for slug conflicts.
+// 	// The isSaving check is required because the title edit is cleared before the
+// 	// generated_slug value is assigned to the current_post from the response.
+// 	const generatedSlug = getEditedPostAttribute( state, 'generated_slug' );
+// 	if ( ! isCurrentPostPublished( state ) && // Post not published
+// 		getCurrentPostAttribute( state, 'title' ) === getEditedPostAttribute( state, 'title' ) && // Title has not been edited
+// 		generatedSlug !== 'auto-draft' && // Not the default slug for auto-draft
+// 		! isSavingPost( state ) ) { // Not currently saving
+// 			const postType = getCurrentPostType( state );
+// 			const postId = getCurrentPostId( state );
+// 			const currentUserId = get( select( 'core' ).getCurrentUser(), [ 'id' ] );
+// 			const autosave = select( 'core' ).getAutosave( postType, postId, currentUserId );
+// 			if ( autosave ) {
+// 				console.log( 'autosave.generated_slug' );
+// 				return getPostRawValue( autosave.generated_slug );
+// 			}
+// 			console.log({'currentTitle': getCurrentPostAttribute( state, 'title'), 'editedTitle': getEditedPostAttribute( state, 'title'), 'generatedSlug': generatedSlug });
+// 			return generatedSlug;
+// 	}
+
+// 	console.log('editedTitle');
+// 	return cleanForSlug( getEditedPostAttribute( state, 'title' ) ) || getCurrentPostId( state );
+// } );
 
 /**
  * Returns the permalink for a post, split into it's three parts: the prefix,
